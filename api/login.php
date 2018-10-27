@@ -1,17 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-function isJson($string) {
-  json_decode($string);
-  return (json_last_error() == JSON_ERROR_NONE);
-}
-
-
-
 function db_connect() {
   $servername = "localhost";
   $dbusername 	= "root";
-  $dbpassword 	= "";
+  $dbpassword 	= "machine1";
   $dbname 		= "contacts";
 
   $conn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);

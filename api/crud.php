@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 function db_connect() {
   $servername = "localhost";
   $dbusername 	= "root";
-  $dbpassword 	= "";
+  $dbpassword 	= "machine1";
   $dbname 		= "contacts";
 
   $conn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
