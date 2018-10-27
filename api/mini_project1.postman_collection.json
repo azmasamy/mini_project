@@ -1,0 +1,273 @@
+{
+	"info": {
+		"_postman_id": "fee457d3-eb3a-416a-97dc-2f2c0222b27a",
+		"name": "mini_project1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://mini_project.localhost/api/crud.php?id=60",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "FEBB222BFE78A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"first_name\": \"Mohamed\",\r\n\t\"last_name\": \"Saudi\",\r\n\t\"numbers\":[ \"905415415420\", \"905415415423\" ],\r\n\t\"phone_title\":[ \"Work\", \"Personal\" ],\r\n\t\"default_numbers\":[ 2, 3]\r\n}"
+				},
+				"url": {
+					"raw": "http://mini_project.localhost/api/crud.php?id=60",
+					"protocol": "http",
+					"host": [
+						"mini_project",
+						"localhost"
+					],
+					"path": [
+						"api",
+						"crud.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://mini_project.localhost/api/crud.php?id=60",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "FEBB222BFE78A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"id\": \"60\"\r\n}"
+				},
+				"url": {
+					"raw": "http://mini_project.localhost/api/crud.php?id=60",
+					"protocol": "http",
+					"host": [
+						"mini_project",
+						"localhost"
+					],
+					"path": [
+						"api",
+						"crud.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://mini_project.localhost/api/crud.php?id=60",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "FEBB222BFE78A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"first_name\": \"Mohamed\",\r\n\t\"last_name\": \"Saudi\",\r\n\t\"numbers\":[ \"905415415420\", \"905415415423\" ],\r\n\t\"phone_title\":[ \"Work\", \"Personal\" ],\r\n\t\"default_numbers\":[ 2, 3]\r\n}"
+				},
+				"url": {
+					"raw": "http://mini_project.localhost/api/crud.php?id=60",
+					"protocol": "http",
+					"host": [
+						"mini_project",
+						"localhost"
+					],
+					"path": [
+						"api",
+						"crud.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://mini_project.localhost/api/crud.php?id=60",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "FEBB222BFE78A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"id\": \"60\",\r\n\t\"first_name\": \"Mohamed\",\r\n\t\"last_name\": \"Saudi\",\r\n\t\"numbers\":[ \"905314918379\" ],\r\n\t\"phone_title\":[ \"Work\" ],\r\n\t\"default_numbers\":[ 2 ]\r\n}"
+				},
+				"url": {
+					"raw": "http://mini_project.localhost/api/crud.php?id=60",
+					"protocol": "http",
+					"host": [
+						"mini_project",
+						"localhost"
+					],
+					"path": [
+						"api",
+						"crud.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://mini_project.localhost/api/crud.php?id=60",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "FEBB222BFE78A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"first_name\": \"Mohamed\",\r\n\t\"last_name\": \"Saudi\",\r\n\t\"numbers\":[ \"905415415420\", \"905415415423\" ],\r\n\t\"phone_title\":[ \"Work\", \"Personal\" ],\r\n\t\"default_numbers\":[ 2, 3]\r\n}"
+				},
+				"url": {
+					"raw": "http://mini_project.localhost/api/crud.php?id=60",
+					"protocol": "http",
+					"host": [
+						"mini_project",
+						"localhost"
+					],
+					"path": [
+						"api",
+						"crud.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://mini_project.localhost/api/crud.php",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "FEBB222BFE78A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"first_name\": \"Mohamed\",\r\n\t\"last_name\": \"Saudi\",\r\n\t\"numbers\":[ \"905415415420\", \"905415415423\" ],\r\n\t\"phone_title\":[ \"Work\", \"Personal\" ],\r\n\t\"default_numbers\":[ 2, 3]\r\n}"
+				},
+				"url": {
+					"raw": "http://mini_project.localhost/api/crud.php",
+					"protocol": "http",
+					"host": [
+						"mini_project",
+						"localhost"
+					],
+					"path": [
+						"api",
+						"crud.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
