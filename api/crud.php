@@ -44,6 +44,15 @@ switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':{
 
     $id = $_GET['id'];
+
+
+      if(empty($id)) {
+        http_response_code(400);
+        $response['status'] = array("code"=>"400","message"=>"Empty ID");
+        $response['data'] = array();
+        die(json_encode($response));
+      }
+
     $contacts_info = array();
 
     $sql = "SELECT * FROM contact WHERE id = '{$id}';";
@@ -51,7 +60,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     if(mysqli_query($conn, $sql)){
       $contact = mysqli_query($conn, $sql)->fetch_assoc();
 
-      if(empty($contact['id'])) {
+      if($contact['id'] == NULL) {
         http_response_code(404);
         $response['status'] = array("code"=>"404","message"=>"Contact not found");
         $response['data'] = array();
@@ -67,7 +76,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
           $all_contact_info[] = array('phone_title' => $phones['phone_title'], 'phone_number' => $phones['phone_number'], 'default_num' => $phones['default_num']);
         }
 
-        $data = array('id' => $names['id'], 'first_name' => $names['first_name'], 'last_name' => $names['last_name'], 'contact_info' => $all_contact_info);
+        $data = array('id' => $contact['id'], 'first_name' => $contact['first_name'], 'last_name' => $contact['last_name'], 'contact_info' => $all_contact_info);
 
         http_response_code(200);
         $response['status'] = array("code"=>"200","message"=>"Retrieved successfully");
@@ -101,8 +110,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         http_response_code(400);
         $response['status'] = array("code"=>"400","message"=>"Empty ID, first name, last name, phone number, phone title, default number or all");
         $response['data'] = array();
-        echo json_encode($response);
-        die();
+        die(json_encode($response));
       }
       if(count($numbers) != count($phone_titles) || count($numbers) != count($default_numbers)) {
         http_response_code(400);
