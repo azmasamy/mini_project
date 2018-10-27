@@ -60,7 +60,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     if(mysqli_query($conn, $sql)){
       $contact = mysqli_query($conn, $sql)->fetch_assoc();
 
-      if($contact['id'] == NULL) {
+      if(empty($contact['id'])) {
         http_response_code(404);
         $response['status'] = array("code"=>"404","message"=>"Contact not found");
         $response['data'] = array();
@@ -127,10 +127,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
       die();
     }
 
-    $sql = "SELECT * FROM contact WHERE id = '{$id}';";
+    $sql = "SELECT * FROM contact WHERE id = '{$contact_id}';";
 
     if(mysqli_query($conn, $sql)){
       $contact = mysqli_query($conn, $sql)->fetch_assoc();
+
 
       if(empty($contact['id'])) {
         http_response_code(404);
@@ -254,7 +255,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
       die();
     }
 
-    $sql = "SELECT * FROM contact WHERE id = '{$id}';";
+    $sql = "SELECT * FROM contact WHERE id = '{$contact_id}';";
 
     if(mysqli_query($conn, $sql)){
       $contact = mysqli_query($conn, $sql)->fetch_assoc();
