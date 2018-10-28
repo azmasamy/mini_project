@@ -31,7 +31,7 @@ if (!$conn) {
 $headers = getallheaders();
 $token = $headers['token'];
 
-if(empty($token) || $token !== 'FEBB222BFE78A') {
+if($token !== 'FEBB222BFE78A') {
   http_response_code(401);
   $response['status'] = array("code"=>"401","message"=>"Unauthorized access");
   $response['data'] = array();
@@ -46,12 +46,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
     $id = $_GET['id'];
 
 
-      if(empty($id)) {
-        http_response_code(400);
-        $response['status'] = array("code"=>"400","message"=>"Empty ID");
-        $response['data'] = array();
-        die(json_encode($response));
-      }
+    if(empty($id)) {
+      http_response_code(400);
+      $response['status'] = array("code"=>"400","message"=>"Empty ID");
+      $response['data'] = array();
+      die(json_encode($response));
+    }
 
     $contacts_info = array();
 
@@ -108,20 +108,36 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
       if(empty($contact_id) || empty($first_name) || empty($last_name) || empty($numbers) || empty($phone_titles) || empty($default_numbers)) {
         http_response_code(400);
-        $response['status'] = array("code"=>"400","message"=>"Empty ID, first name, last name, phone number, phone title, default number or all");
+        $response['status'] = array("code"=>"400","message"=>"Failed to update, Empty ID, first name, last name, phone number, phone title, default number or all");
         $response['data'] = array();
         die(json_encode($response));
       }
+      //making sure that numbers are unique
+      if(count($numbers) != count(array_unique($numbers))) {
+        http_response_code(400);
+        $response['status'] = array("code"=>"404","message"=>"Failed to update, dublicated numbers");
+        $response['data'] = array();
+        die(json_encode($response));
+      }
+      //making sure that numbers are not too long
+      foreach ($numbers as $number) {
+        if(strlen($number) > 11) {
+          http_response_code(400);
+          $response['status'] = array("code"=>"400","message"=>"Failed to update, " . $number . " is too long (11 digits max)");
+          $response['data'] = array();
+          die(json_encode($response));
+        }
+      }
       if(count($numbers) != count($phone_titles) || count($numbers) != count($default_numbers)) {
         http_response_code(400);
-        $response['status'] = array("code"=>"400","message"=>"Every phone number must have phone titles and default number");
+        $response['status'] = array("code"=>"400","message"=>"Failed to update, Every phone number must have phone titles and default number");
         $response['data'] = array();
         echo json_encode($response);
         die();
       }
     } else {
       http_response_code(400);
-      $response['status'] = array("code"=>"400","message"=>"Empty body or not in jason format");
+      $response['status'] = array("code"=>"400","message"=>"Failed to update, Empty body or not in jason format");
       $response['data'] = array();
       echo json_encode($response);
       die();
@@ -129,20 +145,64 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     $sql = "SELECT * FROM contact WHERE id = '{$contact_id}';";
 
+    //check to see if contact exists in the database;
     if(mysqli_query($conn, $sql)){
       $contact = mysqli_query($conn, $sql)->fetch_assoc();
-
-
       if(empty($contact['id'])) {
         http_response_code(404);
-        $response['status'] = array("code"=>"404","message"=>"Contact not found");
+        $response['status'] = array("code"=>"404","message"=>"Failed to update, Contact not found");
         $response['data'] = array();
         die(json_encode($response));
       }
     } else { die(json_encode(respose_sql_error($conn))); }
 
-    $sql = "UPDATE contact SET first_name = '{$first_name}', last_name = '{$last_name}' WHERE id = '{$contact_id}';";
+    //check if first_name and last_name already exist in the database
+    $sql = "SELECT * FROM contact WHERE first_name = '{$first_name}' AND last_name = '{$last_name}';";
+    $result = mysqli_query($conn, $sql);
+    if($result){
+      if(mysqli_num_rows($result) == 1) {
+        $row = $result->fetch_assoc();
+        if($row['id'] != $contact_id) {
+          http_response_code(400);
+          $response['status'] = array("code"=>"400","message"=>"Failed to update, ~" . $first_name . " " . $last_name . "~ already exists in the database");
+          $response['data'] = array();
+          die(json_encode($response));
+        }
+      } else if(mysqli_num_rows($result) > 1) {
+        http_response_code(400);
+        $response['status'] = array("code"=>"400","message"=>"Failed to update, Database Error");
+        $response['data'] = array();
+        die(json_encode($response));
+      }
+    } else { die(json_encode(respose_sql_error($conn))); }
+    //-------------------------------------------------------------
 
+    //check if one of the numbers already exists in the database
+    foreach ($numbers as $number) {
+      $sql = "SELECT * FROM phone_numbers WHERE phone_number = '{$number}';";
+
+      $result = mysqli_query($conn, $sql);
+
+      if($result){
+        if(mysqli_num_rows($result) == 1) {
+          $row = $result->fetch_assoc();
+          if($row['contact_id'] != $contact_id) {
+            http_response_code(400);
+            $response['status'] = array("code"=>"400","message"=>"Failed to update, " . $number . " already exists in the database");
+            $response['data'] = array();
+            die(json_encode($response));
+          }
+        } else if(mysqli_num_rows($result) > 1) {
+          http_response_code(400);
+          $response['status'] = array("code"=>"400","message"=>"Failed to update, Database Error");
+          $response['data'] = array();
+          die(json_encode($response));
+        }
+      } else { die(json_encode(respose_sql_error($conn))); }
+    }
+    //-----------------------------------------------------------------------
+
+    $sql = "UPDATE contact SET first_name = '{$first_name}', last_name = '{$last_name}' WHERE id = '{$contact_id}';";
     if(mysqli_query($conn, $sql)){
       $sql = "DELETE FROM phone_numbers WHERE contact_id = '{$contact_id}';";
 
@@ -184,25 +244,69 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
       if(empty($first_name) || empty($last_name) || empty($numbers) || empty($phone_titles) || empty($default_numbers)) {
         http_response_code(400);
-        $response['status'] = array("code"=>"400","message"=>"Empty first name, last name, phone number, phone title, default number or all");
+        $response['status'] = array("code"=>"400","message"=>"Failed to insert,, Empty first name, last name, phone number, phone title, default number or all");
         $response['data'] = array();
         echo json_encode($response);
         die();
       }
+      //making sure that numbers are unique
+      if(count($numbers) != count(array_unique($numbers))) {
+        http_response_code(400);
+        $response['status'] = array("code"=>"404","message"=>"Failed to insert, dublicated numbers");
+        $response['data'] = array();
+        die(json_encode($response));
+      }
+      //making sure that numbers are not too long
+      foreach ($numbers as $number) {
+        if(strlen($number) > 11) {
+          http_response_code(400);
+          $response['status'] = array("code"=>"400","message"=>"Failed to insert, " . $number . " is too long (11 digits max)");
+          $response['data'] = array();
+          die(json_encode($response));
+        }
+      }
       if(count($numbers) != count($phone_titles) || count($numbers) != count($default_numbers)) {
         http_response_code(400);
-        $response['status'] = array("code"=>"400","message"=>"Every phone number must have phone titles and default number");
+        $response['status'] = array("code"=>"400","message"=>"Failed to insert, Every phone number must have phone titles and default number");
         $response['data'] = array();
         echo json_encode($response);
         die();
       }
     } else {
       http_response_code(400);
-      $response['status'] = array("code"=>"400","message"=>"Empty body or not in jason format");
+      $response['status'] = array("code"=>"400","message"=>"Failed to insert, Empty body or not in jason format");
       $response['data'] = array();
       echo json_encode($response);
       die();
     }
+
+    //check if first_name and last_name already exist in the database
+    $sql = "SELECT * FROM contact WHERE first_name = '{$first_name}' AND last_name = '{$last_name}';";
+    $result = mysqli_query($conn, $sql);
+    if($result){
+      if(mysqli_num_rows($result) > 0) {
+        http_response_code(400);
+        $response['status'] = array("code"=>"400","message"=>"Failed to insert, ~" . $first_name . " " . $last_name . "~ already exists in the database");
+        $response['data'] = array();
+        die(json_encode($response));
+      }
+    } else { die(json_encode(respose_sql_error($conn))); }
+    //-------------------------------------------------------------
+
+    //check if one of the numbers already exists in the database
+    foreach ($numbers as $number) {
+      $sql = "SELECT * FROM phone_numbers WHERE phone_number = '{$number}';";
+      $result = mysqli_query($conn, $sql);
+      if($result){
+        if(mysqli_num_rows($result) > 0) {
+          http_response_code(400);
+          $response['status'] = array("code"=>"400","message"=>"Failed to insert, " . $number . " already exists in the database");
+          $response['data'] = array();
+          die(json_encode($response));
+        }
+      } else { die(json_encode(respose_sql_error($conn))); }
+    }
+    //----------------------------------------------------------
 
     $sql = "INSERT INTO contact (first_name, last_name) VALUES ('{$first_name}', '{$last_name}');";
 
